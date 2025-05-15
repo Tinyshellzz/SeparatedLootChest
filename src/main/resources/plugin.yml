@@ -1,0 +1,13 @@
+name: SeparatedLootChest
+version: '${version}'
+main: com.tinyshellzz.separatedLootChest.SeparatedLootChest
+api-version: '1.20'
+load: POSTWORLD
+authors: [ Tinyshellzz ]
+folia-supported: true
+soft-depend: [PlaceholderAPI]
+commands:
+  ichest:
+    description: tools Command.
+    usage: /separatedLootChest ...
+    default: true

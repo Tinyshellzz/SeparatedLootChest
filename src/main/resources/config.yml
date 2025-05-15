@@ -1,0 +1,5 @@
+db_host: '127.0.0.1'
+db_port: 3360
+db_user: "neotcc"
+db_passwd: "TccServer2024@"
+db_database: "neotcc_tools"
