@@ -57,11 +57,12 @@ public class LootChestMapper {
             stmt.setString(1, gson.toJson(loot_chest.location));
             stmt.setString(2, loot_chest.player_uuid.toString());
             stmt.setString(3, ItemStackManager.ItemStackArrayToBase64(loot_chest.contents));
+            Bukkit.getConsoleSender().sendMessage(loot_chest.location.world.toString());
             if(loot_chest.location.world.equals("world")) {
                 stmt.setInt(4, 0);
-            } else if(loot_chest.location.world.equals("nether")) {
+            } else if(loot_chest.location.world.equals("world_nether")) {
                 stmt.setInt(4, 1);
-            } else if (loot_chest.location.world.equals("end")) {
+            } else if (loot_chest.location.world.equals("world_the_end")) {
                 stmt.setInt(4, 2);
             }
             stmt.executeUpdate();
@@ -145,6 +146,40 @@ public class LootChestMapper {
 
     public LootChest get(Location location, UUID player_uuid){
         return get(new MyLocation(location), player_uuid);
+    }
+
+    public boolean exists(MyLocation location) {
+        PreparedStatement stmt = null;
+        Connection conn = null;
+        ResultSet rs = null;
+        boolean ret = false;
+
+        try {
+            conn = MysqlConfig.connect();
+            conn.commit();
+            stmt = conn.prepareStatement("SELECT COUNT(*) FROM loot_chests where location = ?");
+            stmt.setString(1, gson.toJson(location));
+            rs = stmt.executeQuery();
+
+            if(rs.next() && rs.getInt(1) > 0) {
+                ret = true;
+            }
+        } catch (SQLException e) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "LootChestMapper.get:" + e.getMessage());
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+            }
+        }
+
+        return ret;
+    }
+
+    public boolean exists(Location location){
+        return exists(new MyLocation(location));
     }
 
     /**

@@ -12,7 +12,6 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.loot.LootTable;
-import org.bukkit.loot.LootTables;
 import org.bukkit.loot.Lootable;
 
 import java.util.HashMap;
@@ -92,6 +91,9 @@ public class ContainerInteractListener implements Listener {
 
             lootChestMapper.update(new LootChest(left.getLocation(), playerUUID, left.getInventory().getContents()));
             lootChestMapper.update(new LootChest(right.getLocation(), playerUUID, right.getInventory().getContents()));
+
+            left.getInventory().clear();
+            right.getInventory().clear();
         } else if(holder instanceof Chest chest) {
             if(opened_chests.containsKey(new MyLocation(chest.getLocation()))) {
                 playerUUID = opened_chests.get(new MyLocation(chest.getLocation()));
@@ -101,6 +103,8 @@ public class ContainerInteractListener implements Listener {
 
             Bukkit.getConsoleSender().sendMessage("保存箱子内容");
             lootChestMapper.update(new LootChest(chest.getLocation(), playerUUID, chest.getInventory().getContents()));
+
+            chest.getInventory().clear();
         } else if(holder instanceof Barrel barrel) {
             if(opened_chests.containsKey(new MyLocation(barrel.getLocation()))) {
                 playerUUID = opened_chests.get(new MyLocation(barrel.getLocation()));
@@ -108,6 +112,7 @@ public class ContainerInteractListener implements Listener {
             opened_chests.remove(new MyLocation(barrel.getLocation()));
 
             lootChestMapper.update(new LootChest(barrel.getLocation(), playerUUID, barrel.getInventory().getContents()));
+            barrel.getInventory().clear();
         }
     }
 
@@ -151,10 +156,12 @@ public class ContainerInteractListener implements Listener {
                 if (left_loot_chest != null) {
                     container.getInventory().setContents(left_loot_chest.contents);
                 } else {
-                    container.getInventory().clear();
-                    lootable.setLootTable(lootTable);
-                    lootable.setSeed(System.currentTimeMillis()); // optional: ensures variety
-                    container.update(true); // apply changes
+                    if(lootChestMapper.exists(container.getLocation())) {
+                        lootable.setLootTable(lootTable);
+                        lootable.setSeed(System.currentTimeMillis()); // optional: ensures variety
+                        container.update(true); // apply changes
+                    }
+
                     lootChestMapper.insert(new LootChest(container.getLocation(), playerUUID, container.getInventory().getContents()));
                 }
             }
