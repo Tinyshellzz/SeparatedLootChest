@@ -57,7 +57,6 @@ public class LootChestMapper {
             stmt.setString(1, gson.toJson(loot_chest.location));
             stmt.setString(2, loot_chest.player_uuid.toString());
             stmt.setString(3, ItemStackManager.ItemStackArrayToBase64(loot_chest.contents));
-            Bukkit.getConsoleSender().sendMessage(loot_chest.location.world.toString());
             if(loot_chest.location.world.equals("world")) {
                 stmt.setInt(4, 0);
             } else if(loot_chest.location.world.equals("world_nether")) {
@@ -198,7 +197,7 @@ public class LootChestMapper {
 
             stmt = conn.prepareStatement("DELETE FROM loot_chests where location = ?");
             stmt.setString(1, gson.toJson(location));
-            stmt.executeQuery();
+            stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "LootChestMapper.delete:" + e.getMessage());
@@ -214,5 +213,29 @@ public class LootChestMapper {
 
     public void delete(Location location){
         delete(new MyLocation(location));
+    }
+
+    public void delete_by_world(int world){
+        PreparedStatement stmt = null;
+        Connection conn = null;
+        ResultSet rs = null;
+
+        try {
+            conn = MysqlConfig.connect();
+
+            stmt = conn.prepareStatement("DELETE FROM loot_chests where world = ?");
+            stmt.setInt(1, world);
+            stmt.executeUpdate();
+            conn.commit();
+        } catch (SQLException e) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "LootChestMapper.delete_world:" + e.getMessage());
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+            }
+        }
     }
 }

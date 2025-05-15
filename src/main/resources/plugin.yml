@@ -7,7 +7,7 @@ authors: [ Tinyshellzz ]
 folia-supported: true
 soft-depend: [PlaceholderAPI]
 commands:
-  ichest:
-    description: tools Command.
-    usage: /separatedLootChest ...
+  schest:
+    description: schest Command.
+    usage: /schest ...
     default: true

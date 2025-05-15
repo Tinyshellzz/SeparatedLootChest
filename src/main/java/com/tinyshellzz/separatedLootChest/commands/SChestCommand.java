@@ -7,7 +7,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ChestCommand  implements TabExecutor {
+public class SChestCommand implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         // 判断命令发送者是否是玩家，
@@ -55,7 +54,7 @@ public class ChestCommand  implements TabExecutor {
 
             if(subcommand.equals("refresh")) {
                 // 返回所有玩家昵称
-                return Arrays.asList("refresh");
+                return Arrays.asList("world", "nether", "end");
             }
         }
 

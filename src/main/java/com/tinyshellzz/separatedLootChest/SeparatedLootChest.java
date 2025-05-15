@@ -1,5 +1,6 @@
 package com.tinyshellzz.separatedLootChest;
 
+import com.tinyshellzz.separatedLootChest.commands.SChestCommand;
 import com.tinyshellzz.separatedLootChest.config.PluginConfig;
 import com.tinyshellzz.separatedLootChest.database.ChunkScannedMapper;
 import com.tinyshellzz.separatedLootChest.database.LootChestMapper;
@@ -40,6 +41,8 @@ public class SeparatedLootChest extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new ContainerInteractListener(), this);
         this.getServer().getPluginManager().registerEvents(new ChunkChestScanner(), this);
 
+        // 注册命令
+        this.getCommand("schest").setExecutor(new SChestCommand());
     }
 
     @Override

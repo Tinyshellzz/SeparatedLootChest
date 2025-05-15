@@ -26,6 +26,7 @@ public class LootTableMapper {
             stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS loot_tables (" +
                     "location Varchar(128)," +
                     "table_key Varchar(256)," +
+                    "broken TINYINT," +     // 0代表完好无损，-1代表已经生成过一次战利品，1代表已经被破坏
                     "UNIQUE KEY (location)" +
                     ") ENGINE=InnoDB CHARACTER SET=utf8;");
             stmt.executeUpdate();
@@ -48,9 +49,10 @@ public class LootTableMapper {
         ResultSet rs = null;
         try {
             conn = MysqlConfig.connect();
-            stmt = conn.prepareStatement("INSERT INTO loot_tables VALUES (?, ?)");
+            stmt = conn.prepareStatement("INSERT INTO loot_tables VALUES (?, ?, ?)");
             stmt.setString(1, gson.toJson(location));
             stmt.setString(2, tableKey);
+            stmt.setInt(3, 0);
             stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {
@@ -80,12 +82,12 @@ public class LootTableMapper {
 
             if(rs.next()) {
                 NamespacedKey key = NamespacedKey.fromString(rs.getString("table_key"));
-                if(key != null) {
+                if(key != null && rs.getInt("broken") != 1) {
                     ret = Bukkit.getLootTable(key);
                 }
             }
         } catch (SQLException e) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "LootChestMapper.get:" + e.getMessage());
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "LootTableMapper.get:" + e.getMessage());
         } finally {
             try {
                 if (stmt != null) stmt.close();
@@ -96,6 +98,62 @@ public class LootTableMapper {
         }
 
         return ret;
+    }
+
+    public void update_broken(MyLocation location, int broken) {
+        PreparedStatement stmt = null;
+        Connection conn = null;
+        ResultSet rs = null;
+        try {
+            conn = MysqlConfig.connect();
+            stmt = conn.prepareStatement("UPDATE loot_tables SET broken=? WHERE location=?");
+            stmt.setInt(1, broken);
+            stmt.setString(2, gson.toJson(location));
+            stmt.executeUpdate();
+            conn.commit();
+        } catch (SQLException e) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "LootTableMapper.update_broken:" + e.getMessage());
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+            }
+        }
+    }
+
+    public int get_broken(MyLocation location) {
+        PreparedStatement stmt = null;
+        Connection conn = null;
+        ResultSet rs = null;
+        int ret = 1;
+
+        try {
+            conn = MysqlConfig.connect();
+            conn.commit();
+            stmt = conn.prepareStatement("SELECT * FROM loot_tables where location = ?");
+            stmt.setString(1, gson.toJson(location));
+            rs = stmt.executeQuery();
+            if(rs.next()) {
+                ret = rs.getInt("broken");
+            }
+        } catch (SQLException e) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "LootTableMapper.get:" + e.getMessage());
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+            }
+        }
+
+        return ret;
+    }
+
+    public void update_broken(Location location, boolean broken) {
+        update_broken(new MyLocation(location), broken ? 1 : 0);
     }
 
     public LootTable get_loot_table(Location location) {
