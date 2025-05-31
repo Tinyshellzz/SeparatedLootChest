@@ -96,45 +96,35 @@ public class ContainerInteractListener implements Listener {
             Chest left = (Chest) doubleChest.getLeftSide();
             Chest right = (Chest) doubleChest.getRightSide();
             if (opened_chests.containsKey(new MyLocation(left.getLocation()))) {     // 如果关闭玩家不是打开玩家，则什么都不做
-                LootTable lootTable = lootTableMapper.get_loot_table(left.getLocation());
-                if (lootTable != null) {
-                    if (!playerUUID.equals(opened_chests.get(new MyLocation(left.getLocation()))))
-                        return;
+                if (!playerUUID.equals(opened_chests.get(new MyLocation(left.getLocation()))))
+                    return;
 
-                    lootChestMapper.update(new LootChest(left.getLocation(), playerUUID, left.getInventory().getContents()));
-                    lootChestMapper.update(new LootChest(right.getLocation(), playerUUID, right.getInventory().getContents()));
+                lootChestMapper.update(new LootChest(left.getLocation(), playerUUID, left.getInventory().getContents()));
+                lootChestMapper.update(new LootChest(right.getLocation(), playerUUID, right.getInventory().getContents()));
 
-                    left.getInventory().clear();
-                    right.getInventory().clear();
-                }
+                left.getInventory().clear();
+                right.getInventory().clear();
 
                 opened_chests.remove(new MyLocation(left.getLocation()));
                 opened_chests.remove(new MyLocation(right.getLocation()));
             }
-        } else if(holder instanceof Chest chest) {
+        } else if (holder instanceof Chest chest) {
             if (opened_chests.containsKey(new MyLocation(chest.getLocation()))) {
-                LootTable lootTable = lootTableMapper.get_loot_table(chest.getLocation());
-                if (lootTable != null) {
-                    if (!playerUUID.equals(opened_chests.get(new MyLocation(chest.getLocation()))))
-                        return;
+                if (!playerUUID.equals(opened_chests.get(new MyLocation(chest.getLocation()))))
+                    return;
 
-                    lootChestMapper.update(new LootChest(chest.getLocation(), playerUUID, chest.getInventory().getContents()));
-
-                    chest.getInventory().clear();
-                }
+                lootChestMapper.update(new LootChest(chest.getLocation(), playerUUID, chest.getInventory().getContents()));
+                chest.getInventory().clear();
 
                 opened_chests.remove(new MyLocation(chest.getLocation()));
             }
-        } else if(holder instanceof Barrel barrel) {
+        } else if (holder instanceof Barrel barrel) {
             if (opened_chests.containsKey(new MyLocation(barrel.getLocation()))) {
-                LootTable lootTable = lootTableMapper.get_loot_table(barrel.getLocation());
-                if (lootTable != null) {
-                    if (!playerUUID.equals(opened_chests.get(new MyLocation(barrel.getLocation()))))
-                        return;
+                if (!playerUUID.equals(opened_chests.get(new MyLocation(barrel.getLocation()))))
+                    return;
 
-                    lootChestMapper.update(new LootChest(barrel.getLocation(), playerUUID, barrel.getInventory().getContents()));
-                    barrel.getInventory().clear();
-                }
+                lootChestMapper.update(new LootChest(barrel.getLocation(), playerUUID, barrel.getInventory().getContents()));
+                barrel.getInventory().clear();
 
                 opened_chests.remove(new MyLocation(barrel.getLocation()));
             }
@@ -201,6 +191,7 @@ public class ContainerInteractListener implements Listener {
 
         if (container instanceof Lootable lootable) {
             int broken_flag = lootTableMapper.get_broken(new MyLocation(container.getLocation()));
+            // broken_flag有三种状态，0代表没有被玩家开过，-1代表开过，1代表箱子已经被破坏
             if (broken_flag != 1) {
                 LootChest left_loot_chest = lootChestMapper.get(container.getLocation(), playerUUID);
                 if (left_loot_chest != null) {
