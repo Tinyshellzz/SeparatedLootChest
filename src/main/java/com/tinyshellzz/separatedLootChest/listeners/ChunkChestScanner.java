@@ -41,7 +41,7 @@ public class ChunkChestScanner implements Listener {
             for (BlockState state : chunk.getTileEntities()) {
                 if (state instanceof Container container) {
                     Material type = container.getType();
-                    if (type == Material.CHEST || type == Material.BARREL || type == Material.TRAPPED_CHEST) {
+                    if (type == Material.CHEST || type == Material.BARREL || type == Material.TRAPPED_CHEST || type == Material.SHULKER_BOX) {
                         if(state instanceof Lootable lootable) {
                             MyLocation state_loc = new MyLocation(state.getLocation());
                             LootTable lootTable = lootable.getLootTable();

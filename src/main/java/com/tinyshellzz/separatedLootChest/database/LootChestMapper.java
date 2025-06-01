@@ -25,7 +25,7 @@ public class LootChestMapper {
             stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS loot_chests (" +
                     "location Varchar(128)," +
                     "player_uuid Char(36)," +
-                    "contents Varchar(20000)," +
+                    "contents LONGTEXT," +
                     "world TinyInt," +
                     "UNIQUE KEY (location, player_uuid)" +
                     ") ENGINE=InnoDB CHARACTER SET=utf8;");

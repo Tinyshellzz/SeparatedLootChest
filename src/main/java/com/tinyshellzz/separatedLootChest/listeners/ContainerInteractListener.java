@@ -77,6 +77,18 @@ public class ContainerInteractListener implements Listener {
                 // 第一次打开，则生成战利品。否则就加载以前箱子里的东西
                 updateChestLoot(barrel, lootTable, playerUUID);
             }
+        } else if (holder instanceof ShulkerBox shulkerBox) {
+            LootTable lootTable = lootTableMapper.get_loot_table(shulkerBox.getLocation());
+            if(lootTable != null) {
+                if (opened_chests.containsKey(new MyLocation(shulkerBox.getLocation()))) {     // 箱子已被玩家打开，则不进行任何操作
+                    return;
+                } else {
+                    opened_chests.put(new MyLocation(shulkerBox.getLocation()), playerUUID);
+                }
+
+                // 第一次打开，则生成战利品。否则就加载以前箱子里的东西
+                updateChestLoot(shulkerBox, lootTable, playerUUID);
+            }
         }
     }
 
@@ -128,6 +140,16 @@ public class ContainerInteractListener implements Listener {
 
                 opened_chests.remove(new MyLocation(barrel.getLocation()));
             }
+        } else if (holder instanceof ShulkerBox shulkerBox) {
+            if (opened_chests.containsKey(new MyLocation(shulkerBox.getLocation()))) {
+                if (!playerUUID.equals(opened_chests.get(new MyLocation(shulkerBox.getLocation()))))
+                    return;
+
+                lootChestMapper.update(new LootChest(shulkerBox.getLocation(), playerUUID, shulkerBox.getInventory().getContents()));
+                shulkerBox.getInventory().clear();
+
+                opened_chests.remove(new MyLocation(shulkerBox.getLocation()));
+            }
         }
     }
 
@@ -165,6 +187,18 @@ public class ContainerInteractListener implements Listener {
             // 将箱子标记为被破坏
             lootTableMapper.update_broken(barrel.getLocation(), true);
             lootChestMapper.delete(barrel.getLocation());
+        } else if (block.getState() instanceof ShulkerBox shulkerBox) {
+            // 如果是第一次破坏，则生成战利品; 否则就调用以前的战利品
+            LootChest loot_chest = lootChestMapper.get(shulkerBox.getLocation(), playerUUID);
+            if (loot_chest != null) {
+                shulkerBox.getInventory().setContents(loot_chest.contents);
+            } else {
+                LootTable lootTable = lootTableMapper.get_loot_table(shulkerBox.getLocation());
+                updateChestLoot(shulkerBox, lootTable, playerUUID);
+            }
+            // 将箱子标记为被破坏
+            lootTableMapper.update_broken(shulkerBox.getLocation(), true);
+            lootChestMapper.delete(shulkerBox.getLocation());
         }
     }
 
@@ -177,7 +211,7 @@ public class ContainerInteractListener implements Listener {
         List<Block> blocks = event.blockList();
         for (Block block : blocks) {
             Material type = block.getType();
-            if (type == Material.CHEST || type == Material.BARREL || type == Material.TRAPPED_CHEST) {
+            if (type == Material.CHEST || type == Material.BARREL || type == Material.TRAPPED_CHEST || type == Material.SHULKER_BOX) {
                 // 将箱子标记为被破坏
                 lootTableMapper.update_broken(block.getLocation(), true);
                 lootChestMapper.delete(block.getLocation());
