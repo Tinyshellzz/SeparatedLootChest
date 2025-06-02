@@ -1,4 +1,4 @@
-package com.tinyshellzz.InvManager.utils;
+package com.tinyshellzz.separatedLootChest.utils;
 
 public class MyPair<T1, T2> {
     private T1 first;

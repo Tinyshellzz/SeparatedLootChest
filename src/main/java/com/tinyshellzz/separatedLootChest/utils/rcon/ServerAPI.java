@@ -1,4 +1,4 @@
-package com.tinyshellzz.InvManager.utils.rcon;
+package com.tinyshellzz.separatedLootChest.utils.rcon;
 
 import com.google.common.base.Charsets;
 

@@ -3,6 +3,7 @@ package com.tinyshellzz.separatedLootChest.database;
 import com.tinyshellzz.separatedLootChest.entity.LootChest;
 import com.tinyshellzz.separatedLootChest.entity.MyLocation;
 import com.tinyshellzz.separatedLootChest.services.ItemStackManager;
+import com.tinyshellzz.separatedLootChest.utils.MyPair;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -67,11 +68,40 @@ public class LootTableMapper {
         }
     }
 
-    public LootTable get_loot_table(MyLocation location) {
+
+    public void update(MyLocation location, String tableKey, int broken) {
         PreparedStatement stmt = null;
         Connection conn = null;
         ResultSet rs = null;
-        LootTable ret = null;
+        try {
+            conn = MysqlConfig.connect();
+            stmt = conn.prepareStatement("UPDATE loot_tables SET table_key=?, broken=? WHERE location=?");
+            stmt.setString(1, tableKey);
+            stmt.setInt(2, broken);
+            stmt.setString(3, gson.toJson(location));
+            stmt.executeUpdate();
+            conn.commit();
+        } catch (SQLException e) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "LootTableMapper.update:" + e.getMessage());
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+            }
+        }
+    }
+
+    public boolean exists(MyLocation location) {
+        return get_loot_table_key_and_broken(location) != null;
+    }
+
+    public MyPair<String, Integer> get_loot_table_key_and_broken(MyLocation location) {
+        PreparedStatement stmt = null;
+        Connection conn = null;
+        ResultSet rs = null;
+        MyPair<String, Integer> ret = null;
 
         try {
             conn = MysqlConfig.connect();
@@ -81,10 +111,7 @@ public class LootTableMapper {
             rs = stmt.executeQuery();
 
             if(rs.next()) {
-                NamespacedKey key = NamespacedKey.fromString(rs.getString("table_key"));
-                if(key != null && rs.getInt("broken") != 1) {
-                    ret = Bukkit.getLootTable(key);
-                }
+                ret = new MyPair<>(rs.getString("table_key"), rs.getInt("broken"));
             }
         } catch (SQLException e) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "LootTableMapper.get:" + e.getMessage());
@@ -95,6 +122,18 @@ public class LootTableMapper {
                 if (conn != null) conn.close();
             } catch (SQLException e) {
             }
+        }
+
+        return ret;
+    }
+
+    public LootTable get_loot_table(MyLocation location) {
+        MyPair<String, Integer> loot_table_key_and_broken = get_loot_table_key_and_broken(location);
+        NamespacedKey key = NamespacedKey.fromString(loot_table_key_and_broken.getKey());
+
+        LootTable ret = null;
+        if(key != null && loot_table_key_and_broken.getValue() != 1) {
+            ret = Bukkit.getLootTable(key);
         }
 
         return ret;

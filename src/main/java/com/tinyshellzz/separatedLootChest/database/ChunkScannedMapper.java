@@ -89,4 +89,25 @@ public class ChunkScannedMapper {
 
         return ret;
     }
+
+    public void delete_table() {
+        PreparedStatement stmt = null;
+        Connection conn = null;
+        ResultSet rs = null;
+        try {
+            conn = MysqlConfig.connect();
+            stmt = conn.prepareStatement("DROP TABLE chunk_scanned");
+            stmt.executeUpdate();
+            conn.commit();
+        } catch (SQLException e) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "ChunkScannedMapper.delete_table:" + e.getMessage());
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+            }
+        }
+    }
 }

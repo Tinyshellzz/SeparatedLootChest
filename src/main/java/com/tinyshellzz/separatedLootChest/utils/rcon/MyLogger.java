@@ -1,4 +1,4 @@
-package com.tinyshellzz.InvManager.utils.rcon;
+package com.tinyshellzz.separatedLootChest.utils.rcon;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

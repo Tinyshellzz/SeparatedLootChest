@@ -48,7 +48,11 @@ public class ChunkChestScanner implements Listener {
                             // 将箱子的lootTable保存到数据库中
                             if(lootTable != null) {
                                 String lootTableKey = lootTable.getKey().toString();
-                                lootTableMapper.insert(state_loc, lootTableKey);
+                                if(lootTableMapper.exists(state_loc)) {
+                                    lootTableMapper.update(state_loc, lootTableKey, 0);
+                                } else {
+                                    lootTableMapper.insert(state_loc, lootTableKey);
+                                }
                             }
                         }
                     }

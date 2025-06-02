@@ -16,5 +16,9 @@
 ```angular2html
 /schest refresh end
 ```
+更换战利品表以及新加战利品箱后，使用下面的指令
+```angular2html
+/schest rescan
+```
 
 
