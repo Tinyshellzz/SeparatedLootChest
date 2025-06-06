@@ -1,7 +1,9 @@
 package com.tinyshellzz.separatedLootChest.listeners;
 
+import com.tinyshellzz.separatedLootChest.database.MCPlayerMapper;
 import com.tinyshellzz.separatedLootChest.entity.LootChest;
 import com.tinyshellzz.separatedLootChest.entity.MyLocation;
+import com.tinyshellzz.separatedLootChest.services.MCPlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.*;
@@ -20,8 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import static com.tinyshellzz.separatedLootChest.ObjectPool.lootChestMapper;
-import static com.tinyshellzz.separatedLootChest.ObjectPool.lootTableMapper;
+import static com.tinyshellzz.separatedLootChest.ObjectPool.*;
 
 public class ContainerInteractListener implements Listener {
     HashMap<MyLocation, UUID> opened_chests = new HashMap<>();      // 存储所有打开的箱子
@@ -228,7 +229,7 @@ public class ContainerInteractListener implements Listener {
             // broken_flag有三种状态，0代表没有被玩家开过，-1代表开过，1代表箱子已经被破坏
             if (broken_flag != 1) {
                 LootChest left_loot_chest = lootChestMapper.get(container.getLocation(), playerUUID);
-                if (left_loot_chest != null) {
+                if (left_loot_chest != null) {  // 有过去打开的数据
                     container.getInventory().setContents(left_loot_chest.contents);
                 } else {
                     if (broken_flag == -1) {
@@ -239,6 +240,7 @@ public class ContainerInteractListener implements Listener {
                         lootTableMapper.update_broken(new MyLocation(container.getLocation()), -1);
                     }
 
+                    MCPlayerManager.addLootChestOpened(playerUUID, 1);
                     lootChestMapper.insert(new LootChest(container.getLocation(), playerUUID, container.getInventory().getContents()));
                 }
             }

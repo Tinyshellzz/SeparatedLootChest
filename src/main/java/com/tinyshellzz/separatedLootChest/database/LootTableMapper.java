@@ -129,6 +129,7 @@ public class LootTableMapper {
 
     public LootTable get_loot_table(MyLocation location) {
         MyPair<String, Integer> loot_table_key_and_broken = get_loot_table_key_and_broken(location);
+        if(loot_table_key_and_broken == null) return null;
         NamespacedKey key = NamespacedKey.fromString(loot_table_key_and_broken.getKey());
 
         LootTable ret = null;

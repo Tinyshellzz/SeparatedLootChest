@@ -5,8 +5,10 @@ import com.tinyshellzz.separatedLootChest.config.PluginConfig;
 import com.tinyshellzz.separatedLootChest.database.ChunkScannedMapper;
 import com.tinyshellzz.separatedLootChest.database.LootChestMapper;
 import com.tinyshellzz.separatedLootChest.database.LootTableMapper;
+import com.tinyshellzz.separatedLootChest.database.MCPlayerMapper;
 import com.tinyshellzz.separatedLootChest.listeners.ChunkChestScanner;
 import com.tinyshellzz.separatedLootChest.listeners.ContainerInteractListener;
+import com.tinyshellzz.separatedLootChest.placeholders.SeparatedLootChestExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,6 +36,7 @@ public class SeparatedLootChest extends JavaPlugin {
         ObjectPool.lootChestMapper = new LootChestMapper();
         ObjectPool.lootTableMapper = new LootTableMapper();
         ObjectPool.chunkScannedMapper = new ChunkScannedMapper();
+        ObjectPool.mcPlayerMapper = new MCPlayerMapper();
     }
 
     public void register() {
@@ -43,6 +46,12 @@ public class SeparatedLootChest extends JavaPlugin {
 
         // 注册命令
         this.getCommand("schest").setExecutor(new SChestCommand());
+
+        // 注册 PlaceHolder
+        if (this.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new SeparatedLootChestExpansion(this).register();
+            Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "[TccTools]" + ChatColor.GREEN + "PlaceholderAPI 准备就绪");
+        }
     }
 
     @Override
