@@ -8,6 +8,7 @@ import com.tinyshellzz.separatedLootChest.database.LootTableMapper;
 import com.tinyshellzz.separatedLootChest.database.MCPlayerMapper;
 import com.tinyshellzz.separatedLootChest.listeners.ChunkChestScanner;
 import com.tinyshellzz.separatedLootChest.listeners.ContainerInteractListener;
+import com.tinyshellzz.separatedLootChest.listeners.PlayerJoinListener;
 import com.tinyshellzz.separatedLootChest.placeholders.SeparatedLootChestExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -43,6 +44,7 @@ public class SeparatedLootChest extends JavaPlugin {
         // 注册监听器
         this.getServer().getPluginManager().registerEvents(new ContainerInteractListener(), this);
         this.getServer().getPluginManager().registerEvents(new ChunkChestScanner(), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 
         // 注册命令
         this.getCommand("schest").setExecutor(new SChestCommand());

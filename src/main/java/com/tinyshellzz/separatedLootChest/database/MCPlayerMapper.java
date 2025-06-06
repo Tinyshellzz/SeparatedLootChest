@@ -18,7 +18,7 @@ public class MCPlayerMapper {
         ResultSet rs = null;
         try {
             conn = MysqlConfig.connect();
-            stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS mc_players (" +
+            stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS mc_players_schest (" +
                     "name Varchar(48)," +
                     "uuid Char(36)," +
                     "loot_chest_opened Int," +
@@ -46,7 +46,7 @@ public class MCPlayerMapper {
         ResultSet rs = null;
         try {
             conn = MysqlConfig.connect();
-            stmt = conn.prepareStatement("INSERT INTO mc_players VALUES (?, ?, ?)");
+            stmt = conn.prepareStatement("INSERT INTO mc_players_schest VALUES (?, ?, ?)");
             stmt.setString(1, player.name);
             stmt.setString(2, player.uuid.toString());
             stmt.setInt(3, player.loot_chest_opened);
@@ -72,7 +72,7 @@ public class MCPlayerMapper {
         try {
             conn = MysqlConfig.connect();
             conn.commit();
-            stmt = conn.prepareStatement("SELECT * FROM mc_players WHERE uuid=?");
+            stmt = conn.prepareStatement("SELECT * FROM mc_players_schest WHERE uuid=?");
             stmt.setString(1, mc_uuid);
             rs = stmt.executeQuery();
             if(rs.next()) {
@@ -102,7 +102,7 @@ public class MCPlayerMapper {
         try {
             conn = MysqlConfig.connect();
             conn.commit();
-            stmt = conn.prepareStatement("SELECT * FROM mc_players WHERE name=?");
+            stmt = conn.prepareStatement("SELECT * FROM mc_players_schest WHERE name=?");
             stmt.setString(1, name);
             rs = stmt.executeQuery();
             if(rs.next()) {
@@ -144,7 +144,7 @@ public class MCPlayerMapper {
             ResultSet rs = null;
             try {
                 conn = MysqlConfig.connect();
-                stmt = conn.prepareStatement("UPDATE mc_players SET name = ? WHERE uuid=?");
+                stmt = conn.prepareStatement("UPDATE mc_players_schest SET name = ? WHERE uuid=?");
                 stmt.setString(1, player.getName().toLowerCase());
                 stmt.setString(2, player.getUniqueId().toString());
                 stmt.executeUpdate();
@@ -170,7 +170,7 @@ public class MCPlayerMapper {
         ResultSet rs = null;
         try {
             conn = MysqlConfig.connect();
-            stmt = conn.prepareStatement("UPDATE mc_players SET loot_chest_opened = ? WHERE uuid=?");
+            stmt = conn.prepareStatement("UPDATE mc_players_schest SET loot_chest_opened = ? WHERE uuid=?");
             stmt.setInt(1, mcPlayer.loot_chest_opened + loot_chest_opened_times);
             stmt.setString(2, uuid.toString());
             stmt.executeUpdate();
