@@ -2,11 +2,10 @@ package com.tinyshellzz.separatedLootChest;
 
 import com.tinyshellzz.separatedLootChest.commands.SChestCommand;
 import com.tinyshellzz.separatedLootChest.config.PluginConfig;
-import com.tinyshellzz.separatedLootChest.database.ChunkScannedMapper;
 import com.tinyshellzz.separatedLootChest.database.LootChestMapper;
 import com.tinyshellzz.separatedLootChest.database.LootTableMapper;
 import com.tinyshellzz.separatedLootChest.database.MCPlayerMapper;
-import com.tinyshellzz.separatedLootChest.listeners.ChunkChestScanner;
+import com.tinyshellzz.separatedLootChest.listeners.LootChestScanner;
 import com.tinyshellzz.separatedLootChest.listeners.ContainerInteractListener;
 import com.tinyshellzz.separatedLootChest.listeners.PlayerJoinListener;
 import com.tinyshellzz.separatedLootChest.placeholders.SeparatedLootChestExpansion;
@@ -36,14 +35,13 @@ public class SeparatedLootChest extends JavaPlugin {
 
         ObjectPool.lootChestMapper = new LootChestMapper();
         ObjectPool.lootTableMapper = new LootTableMapper();
-        ObjectPool.chunkScannedMapper = new ChunkScannedMapper();
         ObjectPool.mcPlayerMapper = new MCPlayerMapper();
     }
 
     public void register() {
         // 注册监听器
         this.getServer().getPluginManager().registerEvents(new ContainerInteractListener(), this);
-        this.getServer().getPluginManager().registerEvents(new ChunkChestScanner(), this);
+        this.getServer().getPluginManager().registerEvents(new LootChestScanner(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 
         // 注册命令

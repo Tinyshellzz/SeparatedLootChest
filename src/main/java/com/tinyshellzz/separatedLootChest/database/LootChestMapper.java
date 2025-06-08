@@ -27,7 +27,8 @@ public class LootChestMapper {
                     "player_uuid Char(36)," +
                     "contents LONGTEXT," +
                     "world TinyInt," +
-                    "UNIQUE KEY (location, player_uuid)" +
+                    "UNIQUE KEY (location, player_uuid)," +
+                    "KEY (world)" +
                     ") ENGINE=InnoDB CHARACTER SET=utf8;");
             stmt.executeUpdate();
             conn.commit();

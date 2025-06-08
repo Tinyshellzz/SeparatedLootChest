@@ -1,11 +1,9 @@
 package com.tinyshellzz.separatedLootChest.listeners;
 
 import com.tinyshellzz.separatedLootChest.entity.MyLocation;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,7 +14,7 @@ import org.bukkit.loot.Lootable;
 
 import static com.tinyshellzz.separatedLootChest.ObjectPool.lootTableMapper;
 
-public class ChunkChestScanner implements Listener {
+public class LootChestScanner implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerUse(PlayerInteractEvent event){
         Player player = event.getPlayer();

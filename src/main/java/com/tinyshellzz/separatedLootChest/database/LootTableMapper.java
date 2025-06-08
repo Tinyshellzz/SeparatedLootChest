@@ -28,7 +28,9 @@ public class LootTableMapper {
                     "location Varchar(128)," +
                     "table_key Varchar(256)," +
                     "broken TINYINT," +     // 0代表完好无损，-1代表已经生成过一次战利品，1代表已经被破坏
-                    "UNIQUE KEY (location)" +
+                    "world TinyInt," +
+                    "UNIQUE KEY (location)," +
+                    "KEY (world)" +
                     ") ENGINE=InnoDB CHARACTER SET=utf8;");
             stmt.executeUpdate();
             conn.commit();
@@ -50,10 +52,17 @@ public class LootTableMapper {
         ResultSet rs = null;
         try {
             conn = MysqlConfig.connect();
-            stmt = conn.prepareStatement("INSERT INTO loot_tables VALUES (?, ?, ?)");
+            stmt = conn.prepareStatement("INSERT INTO loot_tables VALUES (?, ?, ?, ?)");
             stmt.setString(1, gson.toJson(location));
             stmt.setString(2, tableKey);
             stmt.setInt(3, 0);
+            if(location.world.equals("world")) {
+                stmt.setInt(4, 0);
+            } else if(location.world.equals("world_nether")) {
+                stmt.setInt(4, 1);
+            } else if (location.world.equals("world_the_end")) {
+                stmt.setInt(4, 2);
+            }
             stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {

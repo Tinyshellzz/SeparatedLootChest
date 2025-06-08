@@ -1,13 +1,10 @@
 package com.tinyshellzz.separatedLootChest.services;
 
-import com.tinyshellzz.separatedLootChest.database.ChunkScannedMapper;
-import com.tinyshellzz.separatedLootChest.listeners.ChunkChestScanner;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import static com.tinyshellzz.separatedLootChest.ObjectPool.chunkScannedMapper;
 import static com.tinyshellzz.separatedLootChest.ObjectPool.lootChestMapper;
 
 public class ChestCommandService {
@@ -30,13 +27,6 @@ public class ChestCommandService {
             sender.sendMessage(ChatColor.RED + args[1] + " 世界不存在");
         }
 
-        return true;
-    }
-
-    public static boolean rescan(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        chunkScannedMapper.delete_table();
-        new ChunkScannedMapper();
-        ChunkChestScanner.chunkScanned.clear();
         return true;
     }
 }

@@ -1,7 +1,6 @@
 package com.tinyshellzz.separatedLootChest;
 
 import com.google.gson.Gson;
-import com.tinyshellzz.separatedLootChest.database.ChunkScannedMapper;
 import com.tinyshellzz.separatedLootChest.database.LootChestMapper;
 import com.tinyshellzz.separatedLootChest.database.LootTableMapper;
 import com.tinyshellzz.separatedLootChest.database.MCPlayerMapper;
@@ -13,6 +12,5 @@ public class ObjectPool {
 
     public static LootChestMapper lootChestMapper;
     public static LootTableMapper lootTableMapper;
-    public static ChunkScannedMapper chunkScannedMapper;
     public static MCPlayerMapper mcPlayerMapper;
 }

@@ -1,10 +1,8 @@
 package com.tinyshellzz.separatedLootChest.listeners;
 
-import com.tinyshellzz.separatedLootChest.database.MCPlayerMapper;
 import com.tinyshellzz.separatedLootChest.entity.LootChest;
 import com.tinyshellzz.separatedLootChest.entity.MyLocation;
 import com.tinyshellzz.separatedLootChest.services.MCPlayerManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.*;
 import org.bukkit.event.EventHandler;
@@ -162,9 +160,11 @@ public class ContainerInteractListener implements Listener {
     @EventHandler
     public void onChestBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
-        UUID playerUUID = event.getPlayer().getUniqueId();      // 该事件只能由玩家触发
+        BlockState state = block.getState();
+        LootChestScanner.scan(state);      // 扫描该箱子
+        UUID playerUUID = event.getPlayer().getUniqueId();
 
-        if (block.getState() instanceof Chest chest) {
+        if (state instanceof Chest chest) {
             // 如果是第一次破坏，则生成战利品; 否则就调用以前的战利品
             LootChest loot_chest = lootChestMapper.get(chest.getLocation(), playerUUID);
             if (loot_chest != null) {
@@ -176,7 +176,7 @@ public class ContainerInteractListener implements Listener {
             // 将箱子标记为被破坏
             lootTableMapper.update_broken(chest.getLocation(), true);
             lootChestMapper.delete(chest.getLocation());
-        } else if (block.getState() instanceof Barrel barrel) {
+        } else if (state instanceof Barrel barrel) {
             // 如果是第一次破坏，则生成战利品; 否则就调用以前的战利品
             LootChest loot_chest = lootChestMapper.get(barrel.getLocation(), playerUUID);
             if (loot_chest != null) {
@@ -188,7 +188,7 @@ public class ContainerInteractListener implements Listener {
             // 将箱子标记为被破坏
             lootTableMapper.update_broken(barrel.getLocation(), true);
             lootChestMapper.delete(barrel.getLocation());
-        } else if (block.getState() instanceof ShulkerBox shulkerBox) {
+        } else if (state instanceof ShulkerBox shulkerBox) {
             // 如果是第一次破坏，则生成战利品; 否则就调用以前的战利品
             LootChest loot_chest = lootChestMapper.get(shulkerBox.getLocation(), playerUUID);
             if (loot_chest != null) {

@@ -38,8 +38,6 @@ public class SChestCommand implements TabExecutor {
             return true;
         } else if (subcommand.equals("refresh")) {
             return ChestCommandService.refresh(sender, command, s, args);
-        } else if (subcommand.equals("rescan")) {
-            return ChestCommandService.rescan(sender, command, s, args);
         }
 
         return false;
@@ -50,7 +48,7 @@ public class SChestCommand implements TabExecutor {
         // 判断命令参数的长度
         if (args.length == 1) {
             // 如果只有一个参数，返回所有子命令的列表
-            return MyUtil.tabComplete(Arrays.asList("reload", "refresh", "rescan"), args[0]);
+            return MyUtil.tabComplete(Arrays.asList("reload", "refresh"), args[0]);
         } else if (args.length == 2) {
             // 如果有两个参数，根据第一个参数返回不同的补全列表
             String subcommand = args[0].toLowerCase();
