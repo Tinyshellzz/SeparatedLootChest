@@ -161,7 +161,7 @@ public class ContainerInteractListener implements Listener {
     public void onChestBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
         BlockState state = block.getState();
-        LootChestScanner.scan(state);      // 扫描该箱子
+//        LootChestScanner.scan(state);      // 扫描该箱子, PlayerInteractEvent包括BlockBreak的情况
         UUID playerUUID = event.getPlayer().getUniqueId();
 
         if (state instanceof Chest chest) {

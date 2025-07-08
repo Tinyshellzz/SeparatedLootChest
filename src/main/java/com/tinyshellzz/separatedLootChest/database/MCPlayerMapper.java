@@ -150,7 +150,7 @@ public class MCPlayerMapper {
                 stmt.executeUpdate();
                 conn.commit();
             } catch (SQLException e) {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "TeamMapper.update_player_name:" + e.getMessage());
+                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "MCPlayerMapper.update_player_name:" + e.getMessage());
             } finally {
                 try {
                     if(stmt != null) stmt.close();
@@ -176,7 +176,7 @@ public class MCPlayerMapper {
             stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "TeamMapper.add_loot_chest_opened:" + e.getMessage());
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "MCPlayerMapper.add_loot_chest_opened:" + e.getMessage());
         } finally {
             try {
                 if(stmt != null) stmt.close();
