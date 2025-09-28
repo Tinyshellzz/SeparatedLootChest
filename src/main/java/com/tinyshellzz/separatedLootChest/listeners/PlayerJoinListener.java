@@ -28,6 +28,6 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        mcPlayerMapper.update_player_name(player);
+        new Thread(() -> {mcPlayerMapper.update_player_name(player);}).start();
     }
 }
